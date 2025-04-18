@@ -25,11 +25,16 @@ export class TasksController {
     return this.tasksService.findAll()
   }
 
-  @Post(':parentId/subtasks')
+  @Post(':id/subtasks')
   createSubtask(
-    @Param('parentId', ParseIntPipe) parentId: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() createSubtaskDto: CreateSubtaskDto
   ): Promise<Task> {
-    return this.tasksService.createSubtask(parentId, createSubtaskDto)
+    return this.tasksService.createSubtask(id, createSubtaskDto)
+  }
+
+  @Get(':id/subtasks')
+  findSubtasks(@Param('id', ParseIntPipe) id: number): Promise<Task[]> {
+    return this.tasksService.findSubtasks(id)
   }
 }

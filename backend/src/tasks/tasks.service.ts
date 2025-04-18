@@ -46,4 +46,19 @@ export class TasksService {
 
     return this.tasksRepo.save(newSubtask)
   }
+
+  async findSubtasks(parentId: number): Promise<Task[]> {
+    const parentTask = await this.tasksRepo.findOneBy({ id: parentId })
+
+    if (!parentTask) {
+      throw new NotFoundException(`Parent task with ID ${parentId} not found`)
+    }
+
+    return this.tasksRepo.find({
+      where: {
+        parent: { id: parentId },
+      },
+      relations: ['subtasks', 'parent'],
+    })
+  }
 }
