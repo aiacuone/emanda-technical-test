@@ -1,5 +1,4 @@
 export class CreateTaskDto {
-    title!: string;
-    parentId?: number;
-  }
-  
+  title!: string
+  parentId?: number
+}

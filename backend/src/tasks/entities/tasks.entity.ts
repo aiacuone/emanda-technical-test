@@ -1,16 +1,23 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm'
 
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id!: number
 
   @Column()
-  title!: string;
+  title!: string
 
   @ManyToOne(() => Task, (task) => task.subtasks, { nullable: true })
-  parent?: Task;
+  parent?: Task
 
   @OneToMany(() => Task, (task) => task.parent)
-  subtasks!: Task[];
+  subtasks!: Task[]
 }
