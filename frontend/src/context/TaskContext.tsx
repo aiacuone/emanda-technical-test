@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Task } from '../types'
 import { fetchTasks, createTask, deleteTask } from '../api/tasks'
-import { createSubtask, deleteSubtask } from '../api/subtasks'
 
 interface TaskContextType {
   tasks: Task[]
   addTask: (title: string, parentId?: number) => Promise<void>
-  removeTask: (id: number, isParentTask: boolean) => Promise<void>
+  removeTask: (id: number, parentId?: number) => Promise<void>
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined)
@@ -22,8 +21,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addTask = async (title: string, parentId?: number) => {
     try {
-      if (parentId) await createSubtask(title, parentId)
-      else await createTask(title)
+      await createTask(title, parentId)
 
       const tasks = await fetchTasks()
       setTasks(tasks)
@@ -32,18 +30,14 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  const removeTask = async (id: number, isParentTask: boolean) => {
+  const removeTask = async (id: number, parentId?: number) => {
     try {
-      if (isParentTask) await deleteTask(id)
-      else await deleteSubtask(id)
+      await deleteTask(id, parentId)
 
       const tasks = await fetchTasks()
       setTasks(tasks)
     } catch (error) {
-      console.error(
-        `Error deleting ${isParentTask ? 'task' : 'subtask'}:`,
-        error
-      )
+      console.error(`Error deleting ${parentId ? 'subtask' : 'task'}:`, error)
     }
   }
 

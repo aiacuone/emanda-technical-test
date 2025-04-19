@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Repository, IsNull } from 'typeorm'
 import { Task } from './entities/tasks.entity'
 import { CreateTaskDto } from './dto/create-task.dto'
 
@@ -11,38 +11,57 @@ export class TasksService {
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const task = new Task()
     task.title = createTaskDto.title
-    return this.tasksRepo.save(task)
+
+    if (createTaskDto.parentId) {
+      const parent = await this.tasksRepo.findOne({
+        where: { id: createTaskDto.parentId },
+        relations: ['subtasks'],
+      })
+
+      if (parent) {
+        task.parent = parent
+        if (!parent.subtasks) {
+          parent.subtasks = []
+        }
+        parent.subtasks.push(task)
+        await this.tasksRepo.save(parent)
+      }
+    }
+
+    const savedTask = await this.tasksRepo.save(task)
+    return this.sanitizeTask(savedTask)
   }
 
   async findAll(): Promise<Task[]> {
-    return this.tasksRepo.find({
-      relations: ['subtasks'],
+    const tasks = await this.tasksRepo.find({
+      relations: ['subtasks', 'parent'],
+      where: { parent: IsNull() }, // Only fetch root tasks
     })
+    return tasks.map((task) => this.sanitizeTask(task))
   }
 
-  async removeTask(id: number): Promise<void> {
-    const task = await this.tasksRepo.findOne({
-      where: { id },
-      relations: ['subtasks'],
-    })
-
-    if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`)
-    }
-
-    await this.tasksRepo.remove(task)
+  async delete(id: number): Promise<void> {
+    await this.tasksRepo.delete(id)
   }
 
-  async findSubtasks(id: number) {
-    const task = await this.tasksRepo.findOne({
-      where: { id },
-      relations: ['subtasks'],
+  async findSubtasks(id: number): Promise<Task[]> {
+    const tasks = await this.tasksRepo.find({
+      where: { parent: { id } },
+      relations: ['subtasks', 'parent'],
     })
+    return tasks.map((task) => this.sanitizeTask(task))
+  }
 
-    if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`)
+  private sanitizeTask(task: Task): any {
+    return {
+      id: task.id,
+      title: task.title,
+      parentId: task.parent?.id,
+      subtasks: task.subtasks?.map((subtask) => ({
+        id: subtask.id,
+        title: subtask.title,
+        parentId: task.id,
+      })),
     }
-
-    return task.subtasks
   }
 }

@@ -16,7 +16,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const onDeleteTask = async () => {
     if (hasSubtasks) return alert('Please delete all subtasks first')
 
-    await removeTask(task.id, isTask)
+    await removeTask(task.id, task.parentId)
   }
 
   return (

@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  ParseIntPipe,
-  Delete,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common'
 import { TasksService } from './tasks.service'
 import { CreateTaskDto } from './dto/create-task.dto'
 
@@ -24,13 +16,13 @@ export class TasksController {
     return this.tasksService.findAll()
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.tasksService.removeTask(id)
+  @Get(':id/subtasks')
+  findSubtasks(@Param('id') id: string) {
+    return this.tasksService.findSubtasks(+id)
   }
 
-  @Get(':id/subtasks')
-  getSubtasks(@Param('id', ParseIntPipe) id: number) {
-    return this.tasksService.findSubtasks(id)
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.tasksService.delete(+id)
   }
 }
