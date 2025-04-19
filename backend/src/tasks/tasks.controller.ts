@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Delete, Param } from "@nestjs/common";
-import { TasksService } from "./tasks.service";
-import { CreateTaskDto } from "./dto/create-task.dto";
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
+import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto/create-task.dto';
 
-@Controller("tasks")
+@Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -16,13 +16,13 @@ export class TasksController {
     return this.tasksService.findAll();
   }
 
-  @Get(":id/subtasks")
-  findSubtasks(@Param("id") id: string) {
+  @Get(':id/subtasks')
+  findSubtasks(@Param('id') id: string) {
     return this.tasksService.findSubtasks(+id);
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
+  @Delete(':id')
+  remove(@Param('id') id: string) {
     return this.tasksService.delete(+id);
   }
 }

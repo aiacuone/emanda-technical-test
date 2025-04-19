@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Button } from "./Button";
-import { CloseButton } from "./CloseButton";
+import React, { useState } from 'react';
+import { Button } from './Button';
+import { CloseButton } from './CloseButton';
 
 interface AddInputProps {
   onClose?: () => void;
@@ -11,14 +11,14 @@ interface AddInputProps {
 export const AddInput: React.FC<AddInputProps> = ({
   onClose,
   onAdd,
-  placeholder = "New Task",
+  placeholder = 'New Task',
 }) => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const showCloseButton = !!onClose;
 
   const onClickAdd = () => {
     onAdd(input);
-    setInput("");
+    setInput('');
   };
 
   return (

@@ -4,8 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
-  JoinColumn,
-} from "typeorm";
+} from 'typeorm';
 
 @Entity()
 export class Task {

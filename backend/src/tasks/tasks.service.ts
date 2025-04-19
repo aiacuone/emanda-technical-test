@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, IsNull } from "typeorm";
-import { Task } from "./entities/tasks.entity";
-import { CreateTaskDto } from "./dto/create-task.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, IsNull } from 'typeorm';
+import { Task } from './entities/tasks.entity';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Injectable()
 export class TasksService {
@@ -15,7 +15,7 @@ export class TasksService {
     if (createTaskDto.parentId) {
       const parent = await this.tasksRepo.findOne({
         where: { id: createTaskDto.parentId },
-        relations: ["subtasks"],
+        relations: ['subtasks'],
       });
 
       if (parent) {
@@ -34,7 +34,7 @@ export class TasksService {
 
   async findAll(): Promise<Task[]> {
     const tasks = await this.tasksRepo.find({
-      relations: ["subtasks", "parent"],
+      relations: ['subtasks', 'parent'],
       where: { parent: IsNull() }, // Only fetch root tasks
     });
     return tasks.map((task) => this.sanitizeTask(task));
@@ -47,7 +47,7 @@ export class TasksService {
   async findSubtasks(id: number): Promise<Task[]> {
     const tasks = await this.tasksRepo.find({
       where: { parent: { id } },
-      relations: ["subtasks", "parent"],
+      relations: ['subtasks', 'parent'],
     });
     return tasks.map((task) => this.sanitizeTask(task));
   }

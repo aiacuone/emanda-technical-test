@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Task } from "../types";
-import { fetchTasks, createTask, deleteTask } from "../api/tasks";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Task } from '../types';
+import { fetchTasks, createTask, deleteTask } from '../api/tasks';
 
 interface TaskContextType {
   tasks: Task[];
@@ -26,7 +26,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       const tasks = await fetchTasks();
       setTasks(tasks);
     } catch (error) {
-      console.error(`Error adding ${parentId ? "subtask" : "task"}:`, error);
+      console.error(`Error adding ${parentId ? 'subtask' : 'task'}:`, error);
     }
   };
 
@@ -37,7 +37,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       const tasks = await fetchTasks();
       setTasks(tasks);
     } catch (error) {
-      console.error(`Error deleting ${parentId ? "subtask" : "task"}:`, error);
+      console.error(`Error deleting ${parentId ? 'subtask' : 'task'}:`, error);
     }
   };
 
@@ -50,6 +50,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useTasks = (): TaskContextType => {
   const context = useContext(TaskContext);
-  if (!context) throw new Error("useTasks must be used within TaskProvider");
+  if (!context) throw new Error('useTasks must be used within TaskProvider');
   return context;
 };
