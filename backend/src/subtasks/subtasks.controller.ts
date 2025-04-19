@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  ParseIntPipe,
-  Delete,
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Delete } from '@nestjs/common'
 import { CreateSubtaskDto } from '../tasks/dto/create-subtask.dto'
 import { Task } from '../tasks/entities/tasks.entity'
 import { SubtasksService } from './subtasks.service'
@@ -15,16 +7,16 @@ import { SubtasksService } from './subtasks.service'
 export class SubtasksController {
   constructor(private readonly subtasksService: SubtasksService) {}
 
-  @Post(':taskId')
+  @Post()
   create(
-    @Param('taskId', ParseIntPipe) taskId: number,
-    @Body() createSubtaskDto: CreateSubtaskDto
+    @Body() createSubtaskDto: CreateSubtaskDto & { taskId: number }
   ): Promise<Task> {
-    return this.subtasksService.create(taskId, createSubtaskDto)
+    const { taskId, ...subtaskData } = createSubtaskDto
+    return this.subtasksService.create(taskId, subtaskData)
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.subtasksService.remove(id)
+  @Delete()
+  remove(@Body() body: { id: number }): Promise<void> {
+    return this.subtasksService.remove(body.id)
   }
 }
