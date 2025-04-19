@@ -66,4 +66,35 @@ export class TasksService {
       where: { parent: { id: parentId } },
     })
   }
+
+  async removeTask(id: number): Promise<void> {
+    const task = await this.tasksRepo.findOne({
+      where: { id },
+      relations: ['subtasks'],
+    })
+
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${id} not found`)
+    }
+
+    // Delete all subtasks first
+    if (task.subtasks) {
+      await this.subtasksRepo.remove(task.subtasks)
+    }
+
+    // Then delete the task
+    await this.tasksRepo.remove(task)
+  }
+
+  async removeSubtask(id: number): Promise<void> {
+    const subtask = await this.subtasksRepo.findOne({
+      where: { id },
+    })
+
+    if (!subtask) {
+      throw new NotFoundException(`Subtask with ID ${id} not found`)
+    }
+
+    await this.subtasksRepo.remove(subtask)
+  }
 }
