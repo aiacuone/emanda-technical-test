@@ -10,31 +10,20 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 
   return (
     <div
-      className="bg-blue-500"
-      style={{
-        border: '1px solid #ccc',
-        borderRadius: '8px',
-        padding: '0.75rem',
-        margin: '0.5rem 0',
-        backgroundColor: task.parentId ? '#f9f9f9' : '#fff',
-        marginLeft: task.parentId ? '2rem' : '0',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      className={`rounded-lg p-3 my-2 border border-gray-300 flex flex-col ${
+        task.parentId ? 'ml-8 bg-gray-50' : 'bg-white'
+      }`}
     >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <div className="flex items-center justify-between">
         <div>
           <strong>{task.title}</strong>
         </div>
+        <button className="text-white bg-red-500 rounded px-[5px] py-[1px] text-sm cursor-pointer border-none">
+          X
+        </button>
       </div>
       {showSubtasks &&
-        task.subtasks.map((subtask) => (
+        task.subtasks?.map((subtask) => (
           <TaskItem key={subtask.id} task={subtask} />
         ))}
     </div>
