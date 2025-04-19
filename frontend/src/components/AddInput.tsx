@@ -1,25 +1,25 @@
-import React, { useState } from 'react'
-import { Button } from './Button'
-import { CloseButton } from './CloseButton'
+import React, { useState } from "react";
+import { Button } from "./Button";
+import { CloseButton } from "./CloseButton";
 
 interface AddInputProps {
-  onClose?: () => void
-  onAdd: (value: string) => void
-  placeholder?: string
+  onClose?: () => void;
+  onAdd: (value: string) => void;
+  placeholder?: string;
 }
 
 export const AddInput: React.FC<AddInputProps> = ({
   onClose,
   onAdd,
-  placeholder = 'New Task',
+  placeholder = "New Task",
 }) => {
-  const [input, setInput] = useState('')
-  const showCloseButton = !!onClose
+  const [input, setInput] = useState("");
+  const showCloseButton = !!onClose;
 
   const onClickAdd = () => {
-    onAdd(input)
-    setInput('')
-  }
+    onAdd(input);
+    setInput("");
+  };
 
   return (
     <div className="flex flex-col sm:flex-row gap-2 w-full">
@@ -36,5 +36,5 @@ export const AddInput: React.FC<AddInputProps> = ({
         {showCloseButton && <CloseButton onClick={onClose} />}
       </div>
     </div>
-  )
-}
+  );
+};

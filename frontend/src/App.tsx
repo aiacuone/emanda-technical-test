@@ -1,14 +1,14 @@
-import React from 'react'
-import { TaskProvider, useTasks } from './context/TaskContext'
-import { AddInput, TaskList } from './components'
+import React from "react";
+import { TaskProvider, useTasks } from "./context/TaskContext";
+import { AddInput, TaskList } from "./components";
 
 const Main = () => {
-  const { addTask } = useTasks()
+  const { addTask } = useTasks();
 
   const onAddTask = (value: string) => {
-    if (!value) return alert('Please enter a task')
-    addTask(value)
-  }
+    if (!value) return alert("Please enter a task");
+    addTask(value);
+  };
 
   return (
     <div className="flex flex-col h-[100dvh]">
@@ -26,13 +26,13 @@ const Main = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const App = () => (
   <TaskProvider>
     <Main />
   </TaskProvider>
-)
+);
 
-export default App
+export default App;

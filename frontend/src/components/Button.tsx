@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 
 interface ButtonProps {
-  children: React.ReactNode
-  onClick: () => void
+  children: React.ReactNode;
+  onClick: () => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({ children, onClick }) => {
@@ -13,5 +13,5 @@ export const Button: React.FC<ButtonProps> = ({ children, onClick }) => {
     >
       {children}
     </button>
-  )
-}
+  );
+};

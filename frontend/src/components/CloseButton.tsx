@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 
 interface CloseButtonProps {
-  onClick: () => void
+  onClick: () => void;
 }
 
 export const CloseButton: React.FC<CloseButtonProps> = ({ onClick }) => {
@@ -12,5 +12,5 @@ export const CloseButton: React.FC<CloseButtonProps> = ({ onClick }) => {
     >
       X
     </button>
-  )
-}
+  );
+};
