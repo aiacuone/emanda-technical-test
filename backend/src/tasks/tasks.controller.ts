@@ -10,6 +10,7 @@ import { TasksService } from './tasks.service'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { CreateSubtaskDto } from './dto/create-subtask.dto'
 import { Task } from './entities/tasks.entity'
+import { Subtask } from './entities/subtask.entity'
 
 @Controller('tasks')
 export class TasksController {
@@ -34,7 +35,7 @@ export class TasksController {
   }
 
   @Get(':id/subtasks')
-  findSubtasks(@Param('id', ParseIntPipe) id: number): Promise<Task[]> {
+  findSubtasks(@Param('id', ParseIntPipe) id: number): Promise<Subtask[]> {
     return this.tasksService.findSubtasks(id)
   }
 }

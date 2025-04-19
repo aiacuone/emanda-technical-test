@@ -7,11 +7,12 @@ interface TaskItemProps {
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   const showSubtasks = !!task.subtasks?.length
+  const isTask = !!task.subtasks
 
   return (
     <div
       className={`rounded-lg p-3 my-2 border border-gray-300 flex flex-col ${
-        task.parentId ? 'ml-8 bg-gray-50' : 'bg-white'
+        isTask ? 'bg-white' : 'ml-8 bg-gray-50'
       }`}
     >
       <div className="flex items-center justify-between">
