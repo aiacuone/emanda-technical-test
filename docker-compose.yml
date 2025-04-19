@@ -6,15 +6,22 @@ services:
     build:
       context: ./backend
     ports:
-      - "3000:3000"
+      - '3000:3000'
     networks:
       - tasknet
 
   frontend:
     build:
       context: ./frontend
+      target: builder # Stop at the builder stage
     ports:
-      - "8080:80"
+      - '8080:5173' # Map container's 5173 to host's 8080
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host
     depends_on:
       - backend
     networks:

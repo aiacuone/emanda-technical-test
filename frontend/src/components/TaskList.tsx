@@ -1,18 +1,17 @@
-import React from 'react';
-import { useTasks } from '../context/TaskContext';
-import { TaskItem } from './TaskItem';
+import React from 'react'
+import { useTasks } from '../context/TaskContext'
+import { TaskItem } from './TaskItem'
 
 export const TaskList: React.FC = () => {
-  const { tasks } = useTasks();
-  const topLevelTasks = tasks.filter((task) => !task.parentId);
+  const { tasks } = useTasks()
 
   return (
     <div>
-      {topLevelTasks.length === 0 ? (
+      {tasks.length === 0 ? (
         <p>No top-level tasks found.</p>
       ) : (
-        topLevelTasks.map((task) => <TaskItem key={task.id} task={task} />)
+        tasks.map((task) => <TaskItem key={task.id} task={task} />)
       )}
     </div>
-  );
-};
+  )
+}
