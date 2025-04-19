@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common'
 import { TasksService } from './tasks.service'
 import { CreateTaskDto } from './dto/create-task.dto'
-import { Task } from './entities/tasks.entity'
 
 @Controller('tasks')
 export class TasksController {
@@ -28,5 +27,10 @@ export class TasksController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.tasksService.removeTask(id)
+  }
+
+  @Get(':id/subtasks')
+  getSubtasks(@Param('id', ParseIntPipe) id: number) {
+    return this.tasksService.findSubtasks(id)
   }
 }

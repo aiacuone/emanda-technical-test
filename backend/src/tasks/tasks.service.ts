@@ -32,4 +32,17 @@ export class TasksService {
 
     await this.tasksRepo.remove(task)
   }
+
+  async findSubtasks(id: number) {
+    const task = await this.tasksRepo.findOne({
+      where: { id },
+      relations: ['subtasks'],
+    })
+
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${id} not found`)
+    }
+
+    return task.subtasks
+  }
 }
