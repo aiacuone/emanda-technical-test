@@ -2,14 +2,22 @@ import React from 'react'
 import { Task } from '../../types'
 import { AddSubtask } from './AddSubtask'
 import { CloseButton } from '../CloseButton'
+import { useTasks } from '../../context/TaskContext'
 
 interface TaskItemProps {
   task: Task
 }
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
-  const showSubtasks = !!task.subtasks?.length
+  const { removeTask } = useTasks()
+  const hasSubtasks = task.subtasks?.length > 0
   const isTask = !!task.subtasks
+
+  const onDeleteTask = async () => {
+    if (hasSubtasks) return alert('Please delete all subtasks first')
+
+    await removeTask(task.id, isTask)
+  }
 
   return (
     <div
@@ -21,10 +29,10 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         <div>
           <strong>{task.title}</strong>
         </div>
-        <CloseButton onClick={() => {}} />
+        <CloseButton onClick={onDeleteTask} />
       </div>
       <div className="ml-4 flex flex-col gap-2">
-        {showSubtasks &&
+        {hasSubtasks &&
           task.subtasks?.map((subtask) => (
             <TaskItem key={subtask.id} task={subtask} />
           ))}
