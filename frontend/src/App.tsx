@@ -1,28 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { TaskProvider, useTasks } from './context/TaskContext'
-import { TaskList } from './components/TaskList'
+import { AddInput, TaskList } from './components'
 
 const Main = () => {
-  const [title, setTitle] = useState('')
   const { addTask } = useTasks()
 
+  const onAddTask = (value: string) => addTask(value)
+
   return (
-    <div>
+    <div className="flex flex-col gap-2 p-3">
       <h1>Task Manager</h1>
-      <input
-        className="border border-gray-300 rounded-md"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="New Task"
-      />
-      <button
-        onClick={() => {
-          addTask(title)
-          setTitle('')
-        }}
-      >
-        Add Task
-      </button>
+      <AddInput onAdd={onAddTask} />
       <TaskList />
     </div>
   )
