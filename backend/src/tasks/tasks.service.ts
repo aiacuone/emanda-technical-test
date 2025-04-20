@@ -3,65 +3,48 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Task } from './entities/tasks.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { plainToInstance } from 'class-transformer';
+import { TaskResponseDto } from './entities/task-response';
 
 @Injectable()
 export class TasksService {
   constructor(@InjectRepository(Task) private tasksRepo: Repository<Task>) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  async create(createTaskDto: CreateTaskDto): Promise<TaskResponseDto> {
     const task = new Task();
     task.title = createTaskDto.title;
 
     if (createTaskDto.parentId) {
       const parent = await this.tasksRepo.findOne({
         where: { id: createTaskDto.parentId },
-        relations: ['subtasks'],
       });
 
       if (parent) {
         task.parent = parent;
-        if (!parent.subtasks) {
-          parent.subtasks = [];
-        }
-        parent.subtasks.push(task);
-        await this.tasksRepo.save(parent);
       }
     }
 
     const savedTask = await this.tasksRepo.save(task);
-    return this.sanitizeTask(savedTask);
+    return plainToInstance(TaskResponseDto, savedTask);
   }
 
-  async findAll(): Promise<Task[]> {
+  async findAll(): Promise<TaskResponseDto[]> {
     const tasks = await this.tasksRepo.find({
       relations: ['subtasks', 'parent'],
-      where: { parent: IsNull() }, // Only fetch root tasks
+      where: { parent: IsNull() },
     });
-    return tasks.map((task) => this.sanitizeTask(task));
+    return plainToInstance(TaskResponseDto, tasks);
   }
 
   async delete(id: number): Promise<void> {
     await this.tasksRepo.delete(id);
   }
 
-  async findSubtasks(id: number): Promise<Task[]> {
+  async findSubtasks(id: number): Promise<TaskResponseDto[]> {
     const tasks = await this.tasksRepo.find({
       where: { parent: { id } },
-      relations: ['subtasks', 'parent'],
+      relations: ['parent'],
     });
-    return tasks.map((task) => this.sanitizeTask(task));
-  }
-
-  private sanitizeTask(task: Task): any {
-    return {
-      id: task.id,
-      title: task.title,
-      parentId: task.parent?.id,
-      subtasks: task.subtasks?.map((subtask) => ({
-        id: subtask.id,
-        title: subtask.title,
-        parentId: task.id,
-      })),
-    };
+    return plainToInstance(TaskResponseDto, tasks);
   }
 }
