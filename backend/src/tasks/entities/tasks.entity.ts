@@ -5,7 +5,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Exclude } from 'class-transformer';
 
 @Entity()
 export class Task {
@@ -18,7 +18,7 @@ export class Task {
   title!: string;
 
   @ManyToOne(() => Task, (task) => task.subtasks)
-  @Transform(({ value }) => value?.id, { toPlainOnly: true })
+  @Exclude()
   parent!: Task;
 
   @OneToMany(() => Task, (task) => task.parent, { cascade: true })
