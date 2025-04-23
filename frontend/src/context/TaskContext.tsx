@@ -1,15 +1,18 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Task } from '../types';
-import { fetchTasks, createTask } from '../api';
+import { fetchTasks, createTask, deleteTask } from '../api/tasks';
 
 interface TaskContextType {
   tasks: Task[];
-  addTask: (title: string, parentId?: number) => void;
+  addTask: (title: string, parentId?: number) => Promise<void>;
+  removeTask: (id: number, parentId?: number) => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
@@ -17,11 +20,32 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const addTask = async (title: string, parentId?: number) => {
-    const newTask = await createTask(title, parentId);
-    fetchTasks().then(setTasks);
+    try {
+      await createTask(title, parentId);
+
+      const tasks = await fetchTasks();
+      setTasks(tasks);
+    } catch (error) {
+      console.error(`Error adding ${parentId ? 'subtask' : 'task'}:`, error);
+    }
   };
 
-  return <TaskContext.Provider value={{ tasks, addTask }}>{children}</TaskContext.Provider>;
+  const removeTask = async (id: number, parentId?: number) => {
+    try {
+      await deleteTask(id, parentId);
+
+      const tasks = await fetchTasks();
+      setTasks(tasks);
+    } catch (error) {
+      console.error(`Error deleting ${parentId ? 'subtask' : 'task'}:`, error);
+    }
+  };
+
+  return (
+    <TaskContext.Provider value={{ tasks, addTask, removeTask }}>
+      {children}
+    </TaskContext.Provider>
+  );
 };
 
 export const useTasks = (): TaskContextType => {

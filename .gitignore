@@ -42,3 +42,5 @@ coverage/
 
 # Optional: Ignore frontend vite cache
 frontend/.vite/
+
+.prettierrc.json

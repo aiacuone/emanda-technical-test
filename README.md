@@ -1,99 +1,104 @@
-# Full Stack Engineering Challenge
+# What did I implement?
 
-## Scenario
+## Back End End
 
-You’ve joined a growing software company that’s building a lightweight task management tool. The application already supports creating and displaying tasks, and the backend supports nested (self-referencing) tasks through a parent-child relationship.
+- GET (subtasks) :id/subtasks
+- DELETE (task) :id
+- Added Decorators and validators to create-task.dto.ts
+- Created SubtaskResponseDto to resolve circular referencing issue with subtasks
+- TaskResponseDto to transform the task data and resolve circular referencing issue
+- Added transformers to Task Entity to transform data
+- Used TaskResponseDto to transform data in create and findAll service function
+- Added delete service function
+- Added findSubtasks service function
 
-Your job is to extend the application’s functionality to enable users to **create subtasks via the UI**, and extend the backend API to retrieve subtasks on demand.
+## Front End
 
-This task is designed to assess your ability to work with a real-world React + NestJS codebase, understand context quickly, and deliver clean, functional improvements.
+- Tailwind
+- AddInput to be used to add a task and subtask
+- Button component
+- CloseButton component
+- AddSubtask component, uses AddInput component
+- removeTask added to context provider
 
----
+# What would I improve?
 
-## Tech Stack
+## Frontend:
 
-This application is built with:
+- Nextjs
+  - SSR
+    - SSR pages and components
+    - Static page generation
+    - Access to data server side
+  - Routing
+    - File System routing
+    - In built routing
+  - API routes
+    - Middleware for authentication
+  - In built components
+    - Link
+    - Image
+  - File based layouts
+- Design overhaul
+  - Designer to create designs
+  - Implement with company logos and colours
+- SWR
+  - Implement SWR as data fetching library to handle fetching and mutation of data
+  - Takes advantage of optimistic updates, meaning the user wont need to wait to see the UI update.
+- Providers
+  - Move the providers to the index.tsx file
+  - Have a providers component, the providers can become hard to read and maintain, using a single component for providers could mitigate this.
+- Component library or equivalent
+  - Shadcn is my preferred choice
+    - Why? Its not a traditional component library, you don’t have to import the whole library into your application, instead you use a script which creates the component and you can modify the component as you need
+  - Toast notifications to confirm whether a task/subtask was successfully created or deleted
+  - Confirmation modal, when deleting a task
+- Stop using axios
+  - Because Nextjs has in built caching with the fetch api, I would stop using axios.
+  - Create a helper function to use the fetch api
+- Accessibility
+  - Make the application accessible using tabs,
+  - Add event listener to use Enter button when adding a task/subtask
+  - Add roles to html elements
+  - When elements are active or focus, five them a clear border or outline
+- Input validation
+  - Add validation to inputs to handle empty strings and very long titles
+  - I recommend React-hook-form library
+- Lazy load subtasks (using new :id/subtasks route)
+  - Possibly add a 'get subtasks' button instead of getting all tasks and subtasks when the page loads
+- Dark mode (nice to have)
 
-- **Frontend**: React (with TypeScript + Context API)
-- **Backend**: NestJS (with TypeORM and SQLite)
-- **Database**: SQLite (in-memory)
-- **Containerisation**: Docker + Docker Compose
-- **Build Tools**: Vite (frontend), Nest CLI (backend)
+## Backend
 
----
+- Have a table for tasks and table for subtasks
+  - If tasks and subtasks become vastly different, it will get harder to maintain
+- Have a tasks module and a subtasks module
+  - If tasks and subtasks become vastly different, it will get harder to maintain
+- Use a persistent database such as postgres
+- Tokens
+- API and security middleware
+  - Add CORS configuration for security
+  - Implement request rate limiting to prevent abuse
+- API Documentation
+  - Swagger
+  - Include proper API documentation with examples and response schemas
+- Performance
+  - Add caching
+- Error Handling and Logging:
+  - Implement a global exception filter for consistent error responses
+  - Add proper logging with different log levels (error, warn, info, debug)
+  - Consider using a logging service for production
+- Configuration Management:
+  - Use .env files for environment variables
+- Input Validation and Sanitization:
+  - Add proper type checking and interfaces
+- Development Experience:
+  - Add API versioning support
 
-## What’s Included
+## General
 
-- `frontend/` — React app that renders and creates top-level tasks.
-- `backend/` — NestJS API that supports nested tasks via a self-referencing entity.
-- `docker-compose.yml` — launches both services together.
-- `nginx.conf` — proxies API calls from frontend to backend.
-- `README.md` — this file.
-
----
-
-## What Works Now
-
-- You can **add top-level tasks** from the UI.
-- Tasks (and their nested subtasks) are displayed recursively.
-- Tasks are saved via the backend into an in-memory SQLite database.
-- API routes:
-  - `GET /api/tasks` — fetch all tasks with nested subtasks
-  - `POST /api/tasks` — create a task (optionally with `parentId`)
-
----
-
-## Your Challenge
-
-To update both frontend and backend to do the following:
-
-### Frontend
-
-- Add UI controls to allow users to create subtasks under any existing task.
-- Wire these to the backend using the existing `createTask(title, parentId)` API call.
-- Ensure newly created subtasks appear nested under their parent task.
-
-### Backend
-
-- Add a new route to the NestJS backend:
-  - `GET /api/tasks/:id/subtasks`
-- This should return all tasks where the `parentId` matches the given `id`.
-- Implement the corresponding service method in `TasksService`.
-
-You may use TypeORM relations to perform the query. Keep the structure clean and RESTful.
-
----
-
-## 🧪 Getting Started
-
-### 1. Build the project
-
-```bash
-docker-compose up --build
-```
-
-This starts:
-- React frontend on [http://localhost:8080](http://localhost:8080)
-- NestJS backend on [http://localhost:3000](http://localhost:3000) (proxied via NGINX)
-
-### 2. Add tasks via UI and verify that tasks render correctly.
-
----
-
-## Submission
-
-This task is intentionally designed to be focused and time-efficient. We expect that it should take no more than 2 to 4 hours, including time to record a brief walkthrough and reflect on improvements.
-
-When you're done, please submit:
-
-- A link to your Git repo.
-- A short description of what you implemented and why (this can be as simple as updating this very README).
-- A short video walkthrough describing your solution, key decision points, and the code structure.
-- A brief roadmap outlining what you would improve or expand on with more time.
-
----
-
-## Questions?
-
-Feel free to clarify anything by reaching out to the team.
-
+- Testing
+  - Add testing suite, I recommend Jest
+  - Add manual and automatic testing
+- Typescript paths
+  - Makes import and exporting much easier
